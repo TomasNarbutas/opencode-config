@@ -159,3 +159,29 @@ Narrow query with `file_pattern` or `label` before paginating large results.
 - Need raw file contents not exposed as qualified_name symbols
 - Quick literal string search where `search_code` would be overkill
 <!-- codebase-memory:end -->
+
+<!-- rtk:start -->
+## rtk (Rust Token Killer) — CLI Output Compressor
+
+https://github.com/rtk-ai/rtk — 68k stars. Installed system-wide.
+
+CLI proxy intercepting shell commands, compressing output 60-90% before LLM sees it. Auto-rewrites via OpenCode hook (`rtk init -g --opencode`):
+
+| Command | Result |
+|---|---|
+| `git status` | `* main` + staged files with `A ` prefix |
+| `git add` | `ok N files changed` |
+| `git commit -m "msg"` | `ok abc1234` |
+| `git push` | `ok main` |
+| `git branch -m old new` | `ok` |
+| `ls -la` (empty dir) | no output (exists but empty) |
+| `ls -la` (non-empty) | compact tree |
+| `cat` / `read` | compressed content |
+| `test <cmd>` | failures only (-90%) |
+
+Exit codes preserved (non-zero on real failure). Full output saved to `~/.local/share/rtk/tee/` on failure for debugging.
+
+**Caveat**: Hook rewrites bash calls only. Built-in tools (Read/Grep/Glob) bypass it — use shell commands instead for compression. Silent on empty results — don't re-retry.
+
+Config: `~/.config/rtk/config.toml`.
+<!-- rtk:end -->
